@@ -8,33 +8,33 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT =5000;
+const PORT = 5000;
 
-const Notes ="./notes.json";
+const Notes = "./notes.json";
 
-app.listen(PORT,()=>{
-    console.log(`server running in port ${PORT}`)
+app.listen(PORT, () => {
+  console.log(`server running in port ${PORT}`)
 })
 app.get('/', (req, res) => {
-    res.send('Welcome to the homepage!');
-  });
+  res.send('Welcome to the homepage!');
+});
 
-app.get('/notes',(req,res)=>{
-    try{
-        const data = fs.readFileSync(Notes,'utf-8')
-        const notes = JSON.parse(data);
-        res.json(notes);
-         
-    }catch(err){
-      res.status(500).json({message:'Error getting notes file'})
-    }
+app.get('/notes', (req, res) => {
+  try {
+    const data = fs.readFileSync(Notes, 'utf-8')
+    const notes = JSON.parse(data);
+    res.json(notes);
+
+  } catch (err) {
+    res.status(500).json({ message: 'Error getting notes file' })
+  }
 })
 
-app.post('/notes',(req,res)=>{
-    try{
-        const data = fs.readFileSync(Notes,'utf-8')
-        const notes = JSON.parse(data);
-         // Get max ID from existing notes
+app.post('/notes', (req, res) => {
+  try {
+    const data = fs.readFileSync(Notes, 'utf-8')
+    const notes = JSON.parse(data);
+    // Get max ID from existing notes
     const maxId = notes.length > 0 ? Math.max(...notes.map(note => note.id)) : 0;
 
     const newNote = {
@@ -44,24 +44,46 @@ app.post('/notes',(req,res)=>{
     notes.push(newNote);
     fs.writeFileSync(Notes, JSON.stringify(notes));
     res.status(201).json(newNote);
-       
-         
-    }catch(err){
-        console.error("error saving notes",err)
-      res.status(500).json({message:'Error saving note'})
-    }
+
+
+  } catch (err) {
+    console.error("error saving notes", err)
+    res.status(500).json({ message: 'Error saving note' })
+  }
 })
 
-app.delete('/notes/:id',(req,res)=>{
+app.delete('/notes/:id', (req, res) => {
 
-  try{
-const data = fs.readFileSync(Notes,'utf-8');
-let notes = JSON.parse(data);
-notes = notes.filter(note=>note.id!== Number(req.params.id));
-fs.writeFileSync(Notes, JSON.stringify(notes));
-res.status(204).end()
-  }catch(err){
+  try {
+    const data = fs.readFileSync(Notes, 'utf-8');
+    let notes = JSON.parse(data);
+    notes = notes.filter(note => note.id !== Number(req.params.id));
+    fs.writeFileSync(Notes, JSON.stringify(notes));
+    res.status(204).end()
+  } catch (err) {
     console.error("Error deleting note", err);
-    res.status(500).json({message:'notes cannot be deleted'})
+    res.status(500).json({ message: 'notes cannot be deleted' })
+  }
+})
+
+app.put('/notes/:id',(req,res)=>{
+  try{
+    const data = fs.readFileSync(Notes, 'utf-8');
+    const notes = JSON.parse(data);
+    let noteIndex = notes.findIndex(note=>note.id===Number(req.params.id));
+    if(noteIndex === -1){
+      return res.status(404).json({ message: 'Note not found' });
+    }
+     // Update note text
+     notes[noteIndex].text = req.body.text;
+
+     // Save updated notes
+     fs.writeFileSync(Notes, JSON.stringify(notes));
+     res.status(200).json(notes[noteIndex]);
+
+  }
+  catch(err){
+    console.error("note not found");
+    res.status(500).json({message:"Note cannot be edited"})
   }
 })
