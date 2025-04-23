@@ -30,10 +30,21 @@ h1 {
   background-color: #f4f4f4;
   margin: 10px 0;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  font-family: Arial, sans-serif;
 }
+
+/* Wrap text and buttons in separate containers */
+.note-content {
+  flex: 1;
+}
+
+/* Button group */
+.note-actions {
+  display: flex;
+  gap: 8px;
+}
+
 
 .notes-list li {
   padding: 12px 16px;
@@ -89,4 +100,48 @@ h1 {
 /* Hover effect for delete button */
 .delete-btn:hover {
   background-color: #d32f2f;
+}
+/* Edit input field styling */
+.notes-list input {
+  flex: 1;
+  padding: 8px;
+  font-size: 15px;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  margin-right: 10px;
+  outline: none;
+}
+
+/* Save button styling */
+.save-btn {
+  background-color: #4caf50; /* Green */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for Save button */
+.save-btn:hover {
+  background-color: #388e3c;
+}
+/* Edit button styling */
+.edit-btn {
+  background-color: black; /* Amber */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 8px;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for Edit button */
+.edit-btn:hover {
+  background-color: #e0a800;
 }
